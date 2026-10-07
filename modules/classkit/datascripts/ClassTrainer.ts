@@ -18,8 +18,11 @@ export interface ClassTrainerDefinition {
     /** Creature whose model and NPC flags are copied; its trainer list is not. */
     templateCreature: number;
     abilities: RankedAbility[];
-    /** A trainer is spawned beside every existing trainer of this class, starting zones included. */
-    spawnBesideTrainersOfClass: number;
+    /**
+     * A trainer is spawned beside every existing trainer of this class (or of
+     * each of these classes), starting zones included.
+     */
+    spawnBesideTrainersOfClass: number | number[];
 }
 
 export function createClassTrainer(context: ClassContext, definition: ClassTrainerDefinition) {
@@ -53,10 +56,11 @@ export function createClassTrainer(context: ClassContext, definition: ClassTrain
     return trainer;
 }
 
-function trainerSpawnsOfClass(classId: number) {
-    const trainerLists = new Set(std.SQL.trainer
-        .queryAll({ Type: CLASS_TRAINER_TYPE, Requirement: classId })
-        .map(trainer => trainer.Id.get()));
+function trainerSpawnsOfClass(classIds: number | number[]) {
+    const trainerLists = new Set(([] as number[]).concat(classIds)
+        .reduce<number[]>((lists, classId) => lists.concat(std.SQL.trainer
+            .queryAll({ Type: CLASS_TRAINER_TYPE, Requirement: classId })
+            .map(trainer => trainer.Id.get())), []));
 
     return std.SQL.creature_default_trainer.queryAll({})
         .filter(link => trainerLists.has(link.TrainerId.get()))
