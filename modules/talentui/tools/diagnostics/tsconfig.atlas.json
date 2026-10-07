@@ -1,0 +1,36 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "moduleResolution": "node",
+    "rootDir": "C:\\Allt\\WoWEmulation\\TSWoW\\tswow-install\\modules\\talentui",
+    "outDir": "C:\\Allt\\WoWEmulation\\TSWoW\\tswow-install\\modules\\talentui\\tools\\diagnostics\\compiled-atlas",
+    "typeRoots": [
+      "node_modules/@wartoshika/wow-declarations",
+      "node_modules/lua-types/5.1",
+      "node_modules/@types"
+    ],
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "types": [
+      "typescript-to-lua/language-extensions"
+    ]
+  },
+  "include": [
+    "C:\\Allt\\WoWEmulation\\TSWoW\\tswow-install\\modules\\talentui\\addon\\ui\\TalentArt.ts"
+  ],
+  "exclude": [],
+  "tstl": {
+    "luaTarget": "5.1",
+    "luaPlugins": [
+      {
+        "name": "C:\\Allt\\WoWEmulation\\TSWoW\\tswow-install\\bin\\scripts\\addons\\addons\\RequirePreload.js",
+        "import": "RequirePreload"
+      }
+    ],
+    "noImplicitSelf": true
+  }
+}

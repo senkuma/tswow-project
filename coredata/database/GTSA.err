@@ -1,0 +1,8 @@
+2026-10-05T17:31:09.693712Z 0 [Warning] TIMESTAMP with implicit DEFAULT value is deprecated. Please use --explicit_defaults_for_timestamp server option (see documentation for more details).
+2026-10-05T17:31:09.694612Z 0 [ERROR] Can't find error-message file 'C:\Allt\WoWEmulation\TSWoW\tswow-install\bin\share\errmsg.sys'. Check error-message file location and 'lc-messages-dir' configuration directive.
+2026-10-05T17:31:09.819425Z 0 [Warning] InnoDB: New log files created, LSN=45790
+2026-10-05T17:31:09.841762Z 0 [Warning] InnoDB: Creating foreign key constraint system tables.
+2026-10-05T17:31:09.907656Z 0 [Warning] No existing UUID has been found, so we assume that this is the first time that this server has been started. Generating a new UUID: 8dc885b9-c0e2-11f1-a456-047c16ed00db.
+2026-10-05T17:31:09.910705Z 0 [Warning] Gtid table is not ready to be used. Table 'mysql.gtid_executed' cannot be opened.
+2026-10-05T17:31:11.061175Z 0 [Warning] CA certificate ca.pem is self signed.
+2026-10-05T17:31:11.525509Z 1 [Note] A temporary password is generated for root@localhost: hz1ygTKR*b8n

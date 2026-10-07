@@ -1,0 +1,1 @@
+require('child_process').execSync(`"bin/node/node.exe" -r source-map-support/register bin/scripts/runtime/runtime/TSWoW.js ${process.argv.slice(1).join(' ')}`, { stdio: 'inherit' })

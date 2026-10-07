@@ -1,0 +1,11 @@
+import "./MarauderClass";
+import "./MarauderSkills";
+import "./abilities/SpoilsOfWar";
+import "./abilities/MarauderAbilities";
+import "./talents/ProcEffects";
+import "./talents/CarnageTree";
+import "./talents/PlunderTree";
+import "./talents/SkirmishTree";
+import "./MarauderStartingKit";
+import "./MarauderTrainer";
+import "./MarauderGear";

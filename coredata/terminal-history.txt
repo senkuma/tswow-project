@@ -1,0 +1,20 @@
+create account sekuma kfnmpah3 3
+./stop
+./command
+./start
+restart
+.restart
+/stop
+stop
+start
+account
+.account
+create
+stop realm
+client start
+build data --rebuild
+build scripts
+build data
+build addon
+start client
+build all

@@ -1,0 +1,26 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "experimentalDecorators": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "build\\default.dataset\\lua"
+    },
+    "tstl": {
+        "luaTarget": "5.4",
+        "noImplicitSelf": true,
+        "luaPlugins": [
+            {
+                "name": "C:\\Allt\\WoWEmulation\\TSWoW\\tswow-install\\bin\\scripts\\addons\\addons\\LuaORM.js",
+                "import": "LuaORM"
+            }
+        ]
+    },
+    "exclude": [
+        "./livescripts/build/lib"
+    ]
+}

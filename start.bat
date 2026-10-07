@@ -1,0 +1,1 @@
+./bin/node/npm run start %*

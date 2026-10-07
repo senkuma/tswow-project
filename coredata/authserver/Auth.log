@@ -1,0 +1,88 @@
+TrinityCore rev. c797f13b2c9f 2025-07-14 14:58:47 -0400 (c797f13b2c9f branch) (Win64, RelWithDebInfo, Dynamic) (authserver)
+<Ctrl-C> to stop.
+
+ ______                       __
+/\__  _\       __          __/\ \__
+\/_/\ \/ _ __ /\_\    ___ /\_\ \, _\  __  __
+   \ \ \/\`'__\/\ \ /' _ `\/\ \ \ \/ /\ \/\ \
+    \ \ \ \ \/ \ \ \/\ \/\ \ \ \ \ \_\ \ \_\ \
+     \ \_\ \_\  \ \_\ \_\ \_\ \_\ \__\\/`____ \
+      \/_/\/_/   \/_/\/_/\/_/\/_/\/__/ `/___/> \
+                                 C O R E  /\___/
+http://TrinityCore.org                    \/__/
+
+Using configuration file C:/Allt/WoWEmulation/TSWoW/tswow-install/coredata/authserver/authserver.conf.
+Using SSL version: OpenSSL 1.1.1h  22 Sep 2020 (library: OpenSSL 1.1.1h  22 Sep 2020)
+Using Boost version: 1.81.0
+Automatic database updates are disabled for all databases!
+Opening DatabasePool 'auth'. Asynchronous connections: 1, synchronous connections: 1.
+MySQL client library: 5.7.32
+MySQL server ver: 5.7.32 
+Connected to MySQL database at localhost
+MySQL client library: 5.7.32
+MySQL server ver: 5.7.32 
+Connected to MySQL database at localhost
+DatabasePool 'auth' opened successfully. 2 total connections running.
+Started auth database connection pool.
+Loading IP Location Database...
+Added realm "TSWoW Realm" at 127.0.0.1:8085.
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+'127.0.0.1:58948' [AuthChallenge] account SEKUMA tried to login with invalid password!
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive
+Ping MySQL to keep connection alive

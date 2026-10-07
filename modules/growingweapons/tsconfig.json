@@ -1,0 +1,31 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "sourceMap": true,
+        "experimentalDecorators": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "livescripts\\build\\default.dataset\\lua",
+        "rootDir": "C:\\Allt\\WoWEmulation\\TSWoW\\tswow-install\\modules\\growingweapons"
+    },
+    "tstl": {
+        "luaTarget": "5.4",
+        "noImplicitSelf": true,
+        "luaPlugins": [
+            {
+                "name": "C:\\Allt\\WoWEmulation\\TSWoW\\tswow-install\\bin\\scripts\\addons\\addons\\LuaORM.js",
+                "import": "LuaORM"
+            }
+        ]
+    },
+    "exclude": [
+        "./livescripts/build/lib"
+    ],
+    "include": [
+        "livescripts",
+        "shared"
+    ]
+}

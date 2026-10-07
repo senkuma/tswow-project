@@ -1,0 +1,8 @@
+# Ignore dependencies and builds
+node_modules/
+bin/
+Crashes/
+log.txt
+
+# Prevent the Claude bug from breaking git again
+nul

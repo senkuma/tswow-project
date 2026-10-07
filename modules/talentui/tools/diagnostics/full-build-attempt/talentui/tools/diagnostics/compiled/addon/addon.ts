@@ -1,0 +1,1 @@
+console.log("Hello from talentui.tools.diagnostics.full-build-attempt.talentui.tools.diagnostics.compiled AddOn!")

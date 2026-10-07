@@ -1,0 +1,1 @@
+console.log("Hello from talentui.tools.diagnostics.compiled-atlas AddOn!")

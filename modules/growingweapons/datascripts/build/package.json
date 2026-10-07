@@ -1,0 +1,10 @@
+{
+    "name": "growingweapons",
+    "version": "1.0.0",
+    "description": "",
+    "main": "datascripts.js",
+    "types": "datascripts.d.ts",
+    "dependencies": {},
+    "devDependencies": {},
+    "scripts": {}
+}

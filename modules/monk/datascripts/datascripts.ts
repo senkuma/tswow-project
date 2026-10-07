@@ -1,0 +1,13 @@
+import "./MonkClass";
+import "./MonkSkills";
+import "./abilities/MonkAbilities";
+import "./abilities/MistAbilities";
+import "./talents/ProcEffects";
+import "./talents/BrewmasterTree";
+import "./talents/MistweaverTree";
+import "./talents/WindwalkerTree";
+import "./MonkStartingKit";
+import "./MonkTrainer";
+import "./MonkGear";
+import "./FuZan";
+import "./ChiAddonData";
