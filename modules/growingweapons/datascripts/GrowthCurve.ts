@@ -8,7 +8,10 @@ export type CombatRatingStat = 'CRIT_RATING' | 'HASTE_RATING' | 'HIT_RATING';
  */
 export type GrowthBonus = PrimaryStat | CombatRatingStat | 'SPELL_POWER' | 'WEAPON_DAMAGE';
 
-/** A weapon's total bonuses at one level. */
+/**
+ * The total bonuses of a regular weapon at one level; the growing weapon
+ * gets GROWING_WEAPON_EDGE times as much.
+ */
 export interface GrowthAnchor {
     level: number;
     bonuses: Partial<Record<GrowthBonus, number>>;
@@ -24,9 +27,16 @@ export interface GrowthTable {
 }
 
 /**
- * Bonuses at every level from 1 to the last anchor's level. Item power grows
- * by a steady percentage per level, so levels between two anchors are
- * interpolated geometrically rather than linearly.
+ * How much stronger a growing weapon is than a regular weapon of its level.
+ * A weapon that only kept pace would be no better than the drops it competes
+ * with, so the edge rewards carrying it from level 1 instead of swapping.
+ */
+export const GROWING_WEAPON_EDGE = 1.15;
+
+/**
+ * Bonuses at every level from 1 to the last anchor's level, GROWING_WEAPON_EDGE
+ * above the anchors. Item power grows by a steady percentage per level, so
+ * levels between two anchors are interpolated geometrically rather than linearly.
  */
 export function growthTable(anchors: GrowthAnchor[]): GrowthTable {
     validateAnchors(anchors);
@@ -38,12 +48,16 @@ export function growthTable(anchors: GrowthAnchor[]): GrowthTable {
         // Each segment ends where the next begins; the final anchor is added once, below.
         for (let level = from.level; level < to.level; level++) {
             const progress = (level - from.level) / (to.level - from.level);
-            levels.push(bonuses.map(bonus => Math.round(interpolate(from.bonuses[bonus]!, to.bonuses[bonus]!, progress))));
+            levels.push(bonuses.map(bonus => withEdge(interpolate(from.bonuses[bonus]!, to.bonuses[bonus]!, progress))));
         }
     }
     const last = anchors[anchors.length - 1];
-    levels.push(bonuses.map(bonus => last.bonuses[bonus]!));
+    levels.push(bonuses.map(bonus => withEdge(last.bonuses[bonus]!)));
     return { bonuses, levels };
+}
+
+function withEdge(regularAmount: number) {
+    return Math.round(regularAmount * GROWING_WEAPON_EDGE);
 }
 
 function interpolate(from: number, to: number, progress: number) {

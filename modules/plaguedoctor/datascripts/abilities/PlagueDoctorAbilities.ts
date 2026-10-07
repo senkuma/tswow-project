@@ -10,9 +10,9 @@ import { FAMILY_BIT } from "./FamilyBits";
 /**
  * The Plague Doctor is a mana caster built from the casters' WotLK rank
  * chains, so levels, mana costs, cast times and spell power scaling follow
- * the spells they replace. Spells that only work through their original
- * class's scripts (Devouring Plague's self heal, Wild Growth's targeting,
- * Weakened Soul) are avoided or described without that part.
+ * the spells they replace. Parts that only work through their original
+ * class's scripts (Death and Decay's damage, Power Word: Shield's Weakened
+ * Soul and spell power bonus) are replaced or described without that part.
  */
 
 // Parent spells: first ranks of WotLK rank chains, or single spells.
@@ -48,7 +48,10 @@ const PHILOSOPHERS_DRAUGHT_BONUS_PERCENT = 20;
 const handMadeRanks = (ranks: [level: number, value: number][], effectIndex = 0): RankSpec[] =>
     ranks.map(([level, value]) => ({
         level,
-        configure: rank => rank.Effects.get(effectIndex).PointsBase.set(value),
+        // The parent's per-level growth is capped at its own max level, below these ranks'
+        // levels, so it would subtract from the value instead of adding to it.
+        // UNVERIFIED API: SpellEffect.PointsPerLevel (Spell.dbc EffectRealPointsPerLevel).
+        configure: rank => rank.Effects.get(effectIndex).PointsBase.set(value).PointsPerLevel.set(0),
     }));
 
 // ---------------------------------------------------------------- Pestilence: toxins, gas and disease
@@ -77,22 +80,26 @@ export const BLIGHT_INJECTION = createRankedAbility(PD, {
     school: 'NATURE',
     skillLine: SKILL_PESTILENCE,
     cost: { kind: 'parent' },
+    // Corruption's second effect is a dummy, which does nothing outside the warlock family.
+    clearedEffects: [1],
     customize: rank => rank.AuraDescription.enGB.set('$s1 Nature damage every $t1 sec.'),
 });
 
+// Devouring Plague is a disease, heals its caster through its leech effect's multiplier and
+// affects one target per caster (a spell attribute), all without priest scripts.
 export const CONTAGION = createRankedAbility(PD, {
     id: 'contagion',
     parent: DEVOURING_PLAGUE,
     familyBit: FAMILY_BIT.CONTAGION,
     firstRankSource: 'TRAINER',
     name: 'Contagion',
-    description: 'Afflicts the target with a virulent plague, causing $o1 Shadow damage over $d.'
-        + '  Contagion is a disease.',
+    description: 'Afflicts the target with a virulent plague, causing $o1 Shadow damage over $d.  15% of the'
+        + ' damage caused heals you.  Contagion is a disease and can only affect one target at a time.',
     icon: 'Spell_Shadow_CreepingPlague',
     school: 'SHADOW',
     skillLine: SKILL_PESTILENCE,
     cost: { kind: 'parent' },
-    customize: rank => rank.AuraDescription.enGB.set('$s1 Shadow damage every $t1 sec.'),
+    customize: rank => rank.AuraDescription.enGB.set('$s1 Shadow damage every $t1 sec, healing the caster.'),
 });
 
 export const MIASMA = createRankedAbility(PD, {
@@ -114,7 +121,14 @@ export const MIASMA = createRankedAbility(PD, {
         rank.row.RuneCostID.set(0);
         rank.BonusData.APDotBonus.set(0)
             .BonusData.DotBonus.set(SP_MIASMA_PER_TICK);
-        rank.Cooldown.Time.set(20000);
+        // Its cloud is a periodic dummy that a death knight script turns into damage;
+        // the gas damages enemies inside it on its own.
+        rank.Effects.get(0).Aura.PERIODIC_DAMAGE.set().DamagePeriod.set(1000);
+        rank.AuraDescription.enGB.set('$s1 Nature damage every $t1 sec.');
+        // Death and Decay's 30 sec category cooldown would otherwise override this one.
+        rank.Cooldown.Time.set(20000)
+            .Cooldown.Category.set(0)
+            .Cooldown.CategoryTime.set(0);
     },
 });
 
@@ -125,7 +139,7 @@ export const PARALYTIC_TOXIN = createRankedAbility(PD, {
     firstRankSource: 'TRAINER',
     name: 'Paralytic Toxin',
     description: 'Splashes the enemy with a paralytic toxin that roots it in place and causes $o2 Nature damage'
-        + ' over $d.  Damage caused may interrupt the effect.',
+        + ' over $d.  Damage caused may interrupt the effect.  Only one target can be paralyzed at a time.',
     icon: 'Ability_PoisonSting',
     school: 'NATURE',
     skillLine: SKILL_PESTILENCE,
@@ -156,7 +170,7 @@ export const RESTORATIVE_DRAUGHT = createRankedAbility(PD, {
     firstRankSource: 'START',
     name: 'Restorative Draught',
     description: 'Administers a carefully measured draught that heals a friendly target for $s1.',
-    icon: 'INV_Potion_51',
+    icon: 'INV_Potion_52',
     school: 'NATURE',
     skillLine: SKILL_REMEDY,
     cost: { kind: 'parent' },
@@ -210,14 +224,14 @@ export const SMELLING_SALTS = createRankedAbility(PD, {
     familyBit: FAMILY_BIT.SMELLING_SALTS,
     firstRankSource: 'TRAINER',
     name: 'Smelling Salts',
-    description: 'A whiff of pungent salts jolts a dead target back to life with $s1% of its health.'
+    description: 'A whiff of pungent salts jolts a dead target back to life with $s1% of its health and mana.'
         + '  Cannot be cast when in combat.',
     icon: 'Spell_Holy_Resurrection',
     school: 'NATURE',
     skillLine: SKILL_REMEDY,
     cost: { kind: 'mana-percent', percent: 60 },
     customize: rank => {
-        // Resurrection restores a flat amount of health and mana; this effect type restores a percentage.
+        // Resurrection restores a flat amount of health and mana; this effect type restores a percentage of both.
         rank.Effects.get(0).Type.RESURRECT.set().HealBase.set(SMELLING_SALTS_HEALTH_PERCENT);
         rank.Effects.get(0).MiscValueA.set(0);
     },
@@ -237,6 +251,8 @@ export const DISTILL_ESSENCE = createRankedAbility(PD, {
     school: 'ARCANE',
     skillLine: SKILL_ALCHEMY,
     cost: { kind: 'free' },
+    // Evocation's empty health regeneration, filled only by the mage's Glyph of Evocation.
+    clearedEffects: [1],
 });
 
 // ---------------------------------------------------------------- talents: Pestilence
@@ -280,6 +296,8 @@ export const BLACK_DEATH = createRankedAbility(PD, {
     school: 'SHADOW',
     skillLine: SKILL_PESTILENCE,
     cost: { kind: 'parent' },
+    // Unstable Affliction's script effect does nothing without the warlock's spell scripts.
+    clearedEffects: [1],
     customize: rank => rank.AuraDescription.enGB.set('$s1 Shadow damage every $t1 sec.'),
 });
 
@@ -297,6 +315,8 @@ export const FESTERING_BLIGHT = createFamilySpell(PD, {
             .AuraDescription.enGB.set('$s1 Nature damage every $t1 sec.');
         spell.Effects.get(0).PointsBase.set(18);
         spell.Effects.get(0).AuraPeriod.set(3000);
+        // Corruption's warlock-only dummy, as for Blight Injection.
+        spell.Effects.get(1).clear();
         spell.BonusData.DotBonus.set(SP_FESTERING_BLIGHT_PER_TICK);
     },
 });
@@ -330,9 +350,15 @@ export const MERCURIAL_WARD = createRankedAbility(PD, {
     skillLine: SKILL_ALCHEMY,
     cost: { kind: 'mana-percent', percent: 20 },
     customize: rank => {
-        // Without Weakened Soul (a priest mechanic) the ward needs a cooldown of its own.
+        // Without Weakened Soul (a priest mechanic) the ward needs a cooldown of its own. Power Word:
+        // Shield's 4 sec category cooldown is shared with the mage wards and Lay on Hands.
         rank.Cooldown.Time.set(8000)
+            .Cooldown.Category.set(0)
+            .Cooldown.CategoryTime.set(0)
             .AuraDescription.enGB.set('Absorbs damage.');
+        // Power Word: Shield cannot be cast on targets with a priest's Weakened Soul.
+        // UNVERIFIED API: SpellRow.ExcludeTargetAuraSpell (Spell.dbc excludeTargetAuraSpell).
+        rank.row.ExcludeTargetAuraSpell.set(0);
     },
 });
 
@@ -345,12 +371,16 @@ export const PHILOSOPHERS_DRAUGHT = createRankedAbility(PD, {
     name: 'Philosopher\'s Draught',
     description: 'Drinks a draught distilled from the philosopher\'s stone, increasing all damage and healing'
         + ' you deal by $s1% for $d.',
-    icon: 'INV_Potion_113',
+    icon: 'INV_Alchemy_Elixir_01',
     school: 'ARCANE',
     skillLine: SKILL_ALCHEMY,
     cost: { kind: 'free' },
     customize: rank => {
         rank.AuraDescription.enGB.set('Damage and healing done increased by $s1%.');
+        // Arcane Power's 15 sec category cooldown is shared with Presence of Mind.
+        rank.Cooldown.Time.set(120000)
+            .Cooldown.Category.set(0)
+            .Cooldown.CategoryTime.set(0);
         // Arcane Power also raises the cost of mage spells.
         rank.Effects.clearAll();
         setSelfAuraEffects(rank, [
@@ -398,8 +428,9 @@ export const PANACEA = createRankedAbility(PD, {
     familyBit: FAMILY_BIT.PANACEA,
     firstRankSource: 'TALENT',
     name: 'Panacea',
-    description: 'Sprays a cure-all mist that heals the friendly target for $s1, then drifts to up to $x1 nearby'
-        + ' wounded allies.  Each jump heals less.',
+    // Chain Heal's chain count includes the first target, and each jump heals 40% less (its damage multiplier).
+    description: 'Sprays a cure-all mist that heals the friendly target for $s1, then drifts to nearby wounded'
+        + ' allies, healing up to $x1 targets in total.  Each jump heals 40% less.',
     icon: 'Spell_Nature_HealingWaveGreater',
     school: 'NATURE',
     skillLine: SKILL_REMEDY,

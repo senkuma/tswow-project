@@ -17,13 +17,13 @@ export const ALCHEMY_TREE = createTalentTree(PD, {
     talents: [
         {
             kind: 'passive', id: 'potent-reagents', row: 0, column: 0, ranks: 5,
-            name: 'Potent Reagents', icon: 'INV_Misc_Herb_19',
+            name: 'Potent Reagents', icon: 'INV_Misc_Herb_GoldClover',
             description: 'Increases all damage and healing you deal by $s1%.',
             effects: [damageDone(ALL_SCHOOLS, 1), healingDone(1)],
         },
         {
             kind: 'passive', id: 'frugal-brewing', row: 0, column: 2, ranks: 5,
-            name: 'Frugal Brewing', icon: 'INV_Misc_Bag_10',
+            name: 'Frugal Brewing', icon: 'INV_Misc_Bag_10_Green',
             description: 'Reduces the mana cost of all your spells by $s1%.',
             effects: [manaCost(-2)],
         },
@@ -78,7 +78,7 @@ export const ALCHEMY_TREE = createTalentTree(PD, {
         },
         {
             kind: 'passive', id: 'treated-leather', row: 5, column: 2, ranks: 3,
-            name: 'Treated Leather', icon: 'INV_Chest_Leather_08',
+            name: 'Treated Leather', icon: 'INV_Chest_Leather_09',
             description: 'Increases your armor value from items by $s1%.',
             effects: [armorFromItems(5)],
         },
@@ -98,7 +98,7 @@ export const ALCHEMY_TREE = createTalentTree(PD, {
         },
         {
             kind: 'passive', id: 'fortifying-elixirs', row: 7, column: 2, ranks: 3,
-            name: 'Fortifying Elixirs', icon: 'INV_Potion_43',
+            name: 'Fortifying Elixirs', icon: 'INV_Potion_164',
             description: 'Increases your maximum health by $s1%.',
             effects: [maxHealthPercent(2)],
         },

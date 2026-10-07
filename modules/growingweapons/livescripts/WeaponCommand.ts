@@ -1,8 +1,9 @@
 import { sendState } from "./ClientMessages";
 import { commandWords } from "./Commands";
 import { GROWING_WEAPONS } from "./GrowingWeaponData";
+import { forEachOwnedWeapon } from "./OwnedWeapons";
 import { progressOf } from "./ProgressStore";
-import { addExperience, forEachOwnedWeapon } from "./WeaponGrowth";
+import { addExperience } from "./WeaponGrowth";
 
 const COMMAND = 'growingweapon';
 // Free weapons and experience are testing tools, so only GM accounts (security level 1+) may use them.

@@ -101,4 +101,20 @@ export const COMMAND_SECTIONS: CommandSection[] = [
             },
         ],
     },
+    {
+        // voidknight/livescripts/GearCommand.ts
+        title: 'Void Knight',
+        buttons: [
+            {
+                label: 'Voidforged Battlegear',
+                description: 'Adds the Voidforged Battlegear damage set, its jewelry, trinkets and maul to your bags.',
+                command: '.voidknightgear battlegear',
+            },
+            {
+                label: 'Voidforged Bulwark',
+                description: 'Adds the Voidforged Bulwark tank set, its jewelry, trinkets and axe to your bags.',
+                command: '.voidknightgear bulwark',
+            },
+        ],
+    },
 ];

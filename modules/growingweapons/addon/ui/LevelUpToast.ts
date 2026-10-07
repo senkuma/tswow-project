@@ -9,6 +9,7 @@ const TOP_OFFSET = -170;
 const LINE_WIDTH = 400;
 const GLOW_WIDTH = 260;
 const TITLE_FONT_SIZE = 26;
+const AWAKENED_GAP = 6;
 const BAND_ALPHA = 0.75;
 const LEVEL_UP_SOUND = 'Sound\\Interface\\LevelUp.wav';
 
@@ -19,13 +20,15 @@ const FADE_OUT_SECONDS = 1.2;
 /**
  * The retail level-up banner for a weapon: a dark band between two gold
  * lines with a green glow rising from the bottom one, the weapon's name, its
- * new level and what the level added. A newer level up replaces a shown one.
+ * new level, what the level added and the passives it awakened, for which
+ * the band grows. A newer level up replaces a shown one.
  */
 export class LevelUpToast {
     private readonly frame: WoWAPI.Frame;
     private readonly weaponName: WoWAPI.FontString;
     private readonly title: WoWAPI.FontString;
     private readonly gains: WoWAPI.FontString;
+    private readonly awakened: WoWAPI.FontString;
     private elapsed = 0;
 
     constructor() {
@@ -47,6 +50,9 @@ export class LevelUpToast {
         this.gains = frame.CreateFontString(undefined, 'OVERLAY', 'GameFontHighlightSmall');
         this.gains.SetPoint('TOP', this.title, 'BOTTOM', 0, -4);
         setTextColor(this.gains, COLORS.green);
+        this.awakened = frame.CreateFontString(undefined, 'OVERLAY', 'GameFontNormal');
+        this.awakened.SetPoint('TOP', this.gains, 'BOTTOM', 0, -AWAKENED_GAP);
+        setTextColor(this.awakened, COLORS.artifact);
 
         frame.SetScript('OnUpdate', (_, elapsed) => this.animate(elapsed));
     }
@@ -59,6 +65,11 @@ export class LevelUpToast {
             .filter(gain => gain.amount > 0)
             .map(gain => formatBonus(gain.amount, gain.label))
             .join('   '));
+        this.awakened.SetText(levelUp.awakened.map(passive => `Awakened: ${passive}`).join('\n'));
+        const [, lineHeight] = this.awakened.GetFont();
+        this.frame.SetHeight(HEIGHT + (levelUp.awakened.length === 0
+            ? 0
+            : AWAKENED_GAP + levelUp.awakened.length * lineHeight));
         this.elapsed = 0;
         this.frame.SetAlpha(0);
         this.frame.Show();

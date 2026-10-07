@@ -1,8 +1,10 @@
 /**
  * Growing weapon progress as the server reports it in addon messages
  * (livescripts/ClientMessages.ts writes them):
- *   STATE;item;level;maxLevel;experience;experienceToNext;cap;bonuses;amounts;nextAmounts
- *   LEVELUP;item;level;gains
+ *   STATE;item;level;maxLevel;experience;experienceToNext;cap;bonuses;amounts;nextAmounts;milestones
+ *   LEVELUP;item;level;gains;awakened
+ * Milestones are comma separated level:spell pairs; awakened lists the spells
+ * of the milestones a level up reached.
  */
 export const ADDON_PREFIX = 'GROWWPN';
 
@@ -27,6 +29,16 @@ export interface WeaponBonus {
     next?: number;
 }
 
+/** A passive the weapon gives its wielder from a level on. */
+export interface WeaponMilestone {
+    level: number;
+    spell: number;
+    name: string;
+    icon: string;
+    /** Whether the weapon has reached the milestone's level. */
+    unlocked: boolean;
+}
+
 export interface WeaponState {
     item: number;
     level: number;
@@ -36,20 +48,26 @@ export interface WeaponState {
     /** The highest level the weapon may reach before its wielder levels. */
     cap: number;
     bonuses: WeaponBonus[];
+    /** In increasing level order. */
+    milestones: WeaponMilestone[];
 }
 
 export interface WeaponLevelUp {
     item: number;
     level: number;
     gains: { label: string; amount: number }[];
+    /** Names of the passives the level up unlocked. */
+    awakened: string[];
 }
 
 export type WeaponEvent =
     | { kind: 'state'; state: WeaponState }
     | { kind: 'levelUp'; levelUp: WeaponLevelUp };
 
-const STATE_FIELDS = 10;
-const LEVEL_UP_FIELDS = 4;
+const STATE_FIELDS = 11;
+const LEVEL_UP_FIELDS = 5;
+// For a spell missing from the client's Spell.dbc, as when its patch is outdated.
+const UNKNOWN_SPELL_ICON = 'Interface\\Icons\\INV_Misc_QuestionMark';
 
 export function isMaxLevel(state: WeaponState) {
     return state.level >= state.maxLevel;
@@ -97,12 +115,18 @@ export class WeaponProgressStore {
     private parseLevelUp(fields: string[]): WeaponLevelUp | undefined {
         const [item, level] = numbers(fields.slice(1, 3));
         const gains = numbers(list(fields[3]));
+        const awakened = numbers(list(fields[4]));
         // The STATE sent just before names the bonuses.
         const state = this.stateOf(item);
-        if (!(level > 0) || gains.some(gain => isNaN(gain)) || state === undefined || gains.length !== state.bonuses.length) {
+        if (!(level > 0) || [...gains, ...awakened].some(n => isNaN(n)) || state === undefined
+            || gains.length !== state.bonuses.length) {
             return undefined;
         }
-        return { item, level, gains: gains.map((amount, index) => ({ label: state.bonuses[index].label, amount })) };
+        return {
+            item, level,
+            gains: gains.map((amount, index) => ({ label: state.bonuses[index].label, amount })),
+            awakened: awakened.map(spell => spellNameAndIcon(spell).name),
+        };
     }
 }
 
@@ -111,9 +135,11 @@ function parseState(fields: string[]): WeaponState | undefined {
     const keys = list(fields[7]);
     const amounts = numbers(list(fields[8]));
     const nextAmounts = numbers(list(fields[9]));
+    const milestones = list(fields[10]).map(pair => numbers(pair.split(':')));
     const atMax = level >= maxLevel;
     const valid = [item, level, maxLevel, experience, experienceToNext, cap, ...amounts, ...nextAmounts].every(n => !isNaN(n))
-        && keys.length === amounts.length && nextAmounts.length === (atMax ? 0 : amounts.length);
+        && keys.length === amounts.length && nextAmounts.length === (atMax ? 0 : amounts.length)
+        && milestones.every(pair => pair.length === 2 && !isNaN(pair[0]) && !isNaN(pair[1]));
     if (!valid) {
         return undefined;
     }
@@ -121,7 +147,15 @@ function parseState(fields: string[]): WeaponState | undefined {
         item, level, maxLevel, experience, experienceToNext, cap,
         bonuses: keys.map((key, index) =>
             ({ key, label: bonusLabel(key), amount: amounts[index], next: atMax ? undefined : nextAmounts[index] })),
+        milestones: milestones.map(([milestoneLevel, spell]) =>
+            ({ level: milestoneLevel, spell, ...spellNameAndIcon(spell), unlocked: level >= milestoneLevel })),
     };
+}
+
+/** A spell's name and icon as the client knows them. */
+function spellNameAndIcon(spell: number): { name: string; icon: string } {
+    const [name, , icon] = GetSpellInfo(spell);
+    return { name: name ?? `Spell ${spell}`, icon: icon ?? UNKNOWN_SPELL_ICON };
 }
 
 function list(field: string) {

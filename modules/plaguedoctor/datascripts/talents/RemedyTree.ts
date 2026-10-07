@@ -23,7 +23,7 @@ export const REMEDY_TREE = createTalentTree(PD, {
         },
         {
             kind: 'passive', id: 'steady-pulse', row: 0, column: 2, ranks: 5,
-            name: 'Steady Pulse', icon: 'INV_Potion_51',
+            name: 'Steady Pulse', icon: 'INV_Potion_52',
             description: 'Reduces the casting time of Restorative Draught by $/1000;S1 sec.',
             effects: [abilityFlat('CASTING_TIME', -100, [RESTORATIVE_DRAUGHT])],
         },

@@ -142,8 +142,8 @@ export const PLAGUE_PHYSICIAN_SET = createClassItemSet(PD, {
                 name: 'Regalia of the Plague Physician 4-Piece Bonus',
                 description: 'Your Toxic Vial has a $h% chance to splash noxious ooze over the target, dealing'
                     + ` $${NOXIOUS_SPLASH.ID}s1 Nature damage to it and every enemy within ${SPLASH_RADIUS_YARDS}`
-                    + ' yards.  Also increases the healing of Restorative Draught and Restorative Injection'
-                    + ' by $s2%.',
+                    + ' yards.  Also increases the direct healing of Restorative Draught and Restorative'
+                    + ' Injection by $s2%.',
                 icon: 'Spell_Nature_Acid_01',
                 effects: [
                     triggerSpell(NOXIOUS_SPLASH.ID),

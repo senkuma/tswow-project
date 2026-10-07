@@ -68,7 +68,7 @@ export class TooltipProgress {
             return;
         }
         showGrownStats(entry.tooltip, state);
-        const firstLine = reservePanelSpace(entry.tooltip, panelHeight(state.bonuses.length));
+        const firstLine = reservePanelSpace(entry.tooltip, panelHeight(state.bonuses.length, state.milestones.length));
         const frame = entry.panel.frame;
         frame.ClearAllPoints();
         frame.SetPoint('TOPLEFT', firstLine, 'TOPLEFT');

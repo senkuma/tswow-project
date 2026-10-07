@@ -15,6 +15,7 @@ finish('growingweapons-livescript-data', () => {
         '    {',
         `        item: ${weapon.item},`,
         `        bonuses: [${weapon.bonuses.map(bonus => `'${bonus}'`).join(', ')}],`,
+        `        milestones: [${weapon.milestones.map(({ level, spell }) => `{ level: ${level}, spell: ${spell} }`).join(', ')}],`,
         '        levels: [',
         ...weapon.levels.map(level =>
             `            { enchantment: ${level.enchantment}, amounts: [${level.amounts.join(', ')}] },`),
