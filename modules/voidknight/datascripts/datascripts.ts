@@ -1,4 +1,14 @@
-// The Void Knight is still being built: its abilities, talents, gear and
-// growing weapon arrive in the next commit, which restores this file's imports.
-// Until then the module creates nothing, so the other modules keep building.
-export {};
+import "./VoidKnightClass";
+import "./VoidKnightSkills";
+import "./abilities/VoidShards";
+import "./abilities/Aspects";
+import "./abilities/GravityAbilities";
+import "./abilities/RiftAbilities";
+import "./abilities/BulwarkAbilities";
+import "./talents/GravityTree";
+import "./talents/RiftTree";
+import "./talents/BulwarkTree";
+import "./VoidKnightStartingKit";
+import "./VoidKnightTrainer";
+import "./VoidKnightGear";
+import "./UmbraGreatsword";

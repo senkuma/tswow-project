@@ -1,5 +1,6 @@
-import { createClassItem } from "classkit";
+import { abilityPercent, createClassItem, createPassiveSpell, meleeCrit, meleeHaste, movementSpeed, statPercent } from "classkit";
 import { GrowthAnchor, makeGrowingWeapon } from "growingweapons";
+import { JAB, TIGER_PALM } from "./abilities/MonkAbilities";
 import { MODULE_NAME } from "./Constants";
 import { MONK_CONTEXT } from "./MonkClass";
 
@@ -9,7 +10,7 @@ import { MONK_CONTEXT } from "./MonkClass";
  * melee ratings (critical strike, haste, hit) with every level. Until level
  * 80 it keeps pace with weapons of the wielder's level; its last twenty
  * levels climb to the server's endgame staves (item level 277 scaled by the
- * endgame power factor).
+ * endgame power factor). Every 25 levels it awakens a passive.
  */
 const BENT_STAFF = 35;                // level 1 staff, 3-5 damage
 const BASE_AVERAGE_DAMAGE = 4;
@@ -57,6 +58,37 @@ const FU_ZAN_GROWTH = [
     anchor({ level: 100, dps: 1060, agility: 650, stamina: 480, crit: 390, haste: 310, hit: 260 }),
 ];
 
+// ---------------------------------------------------------------- milestone passives
+
+const WANDERERS_STRIDE = createPassiveSpell(MONK_CONTEXT, 'fu-zan-wanderers-stride', {
+    name: 'Wanderer\'s Stride',
+    description: 'Increases your movement speed by $s1%.',
+    icon: 'Ability_Monk_Roll',
+    effects: [movementSpeed(8)],
+});
+
+const BREWMASTERS_BALANCE = createPassiveSpell(MONK_CONTEXT, 'fu-zan-brewmasters-balance', {
+    name: 'Brewmaster\'s Balance',
+    description: 'Increases your Agility by $s1%.',
+    icon: 'Monk_Stance_DrunkenOx',
+    effects: [statPercent('AGILITY', 4)],
+});
+
+const STAFF_OF_THE_TIGER = createPassiveSpell(MONK_CONTEXT, 'fu-zan-staff-of-the-tiger', {
+    name: 'Staff of the Tiger',
+    description: 'Increases the damage of Jab and Tiger Palm by $s1%.',
+    icon: 'Ability_Monk_TigerPalm',
+    effects: [abilityPercent('DAMAGE', 10, [JAB, TIGER_PALM])],
+});
+
+const SPIRIT_OF_THE_WANDERER = createPassiveSpell(MONK_CONTEXT, 'fu-zan-spirit-of-the-wanderer', {
+    name: 'Spirit of the Wanderer',
+    description: 'Increases your chance to critically hit with melee attacks by $s1% and your melee attack'
+        + ' speed by $s2%.',
+    icon: 'Spell_Monk_WindWalker_Spec',
+    effects: [meleeCrit(3), meleeHaste(3)],
+});
+
 export const FU_ZAN = makeGrowingWeapon(MODULE_NAME, createClassItem(MONK_CONTEXT, {
     id: 'fu-zan',
     parent: BENT_STAFF,
@@ -69,4 +101,10 @@ export const FU_ZAN = makeGrowingWeapon(MODULE_NAME, createClassItem(MONK_CONTEX
     .Delay.set(SWING_SECONDS * 1000, 'MILLISECONDS'), {
     id: 'fu-zan',
     growth: FU_ZAN_GROWTH,
+    milestones: [
+        { level: 25, spell: WANDERERS_STRIDE.ID },
+        { level: 50, spell: BREWMASTERS_BALANCE.ID },
+        { level: 75, spell: STAFF_OF_THE_TIGER.ID },
+        { level: 100, spell: SPIRIT_OF_THE_WANDERER.ID },
+    ],
 });

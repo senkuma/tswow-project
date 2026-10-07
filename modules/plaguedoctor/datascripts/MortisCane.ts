@@ -1,4 +1,4 @@
-import { createClassItem } from "classkit";
+import { createClassItem, createPassiveSpell, damageDone, healingDone, MAGIC_SCHOOLS, manaCost, spellCrit, statPercent } from "classkit";
 import { GrowthAnchor, makeGrowingWeapon } from "growingweapons";
 import { MODULE_NAME } from "./Constants";
 import { PLAGUE_DOCTOR_CONTEXT } from "./PlagueDoctorClass";
@@ -9,7 +9,7 @@ import { PLAGUE_DOCTOR_CONTEXT } from "./PlagueDoctorClass";
  * strike, haste) with every level, for healing and harming alike. Until level
  * 80 it keeps pace with caster staves of the wielder's level; its last twenty
  * levels climb to the server's endgame staves (item level 277 scaled by the
- * endgame power factor).
+ * endgame power factor). Every 25 levels it awakens a passive.
  *
  * It grows no weapon damage: a caster's staff is for its stats, and dropping
  * the damage bonus leaves room on the level enchantment for spell power, which
@@ -56,6 +56,36 @@ const MORTIS_GROWTH = [
     anchor({ level: 100, spellPower: 2720, intellect: 572, stamina: 572, spirit: 426, crit: 300, haste: 426 }),
 ];
 
+// ---------------------------------------------------------------- milestone passives
+
+const PLAGUE_SCHOLAR = createPassiveSpell(PLAGUE_DOCTOR_CONTEXT, 'mortis-plague-scholar', {
+    name: 'Plague Scholar',
+    description: 'Increases your Intellect by $s1%.',
+    icon: 'INV_Misc_Book_06',
+    effects: [statPercent('INTELLECT', 4)],
+});
+
+const MIASMIC_FOCUS = createPassiveSpell(PLAGUE_DOCTOR_CONTEXT, 'mortis-miasmic-focus', {
+    name: 'Miasmic Focus',
+    description: 'Increases your chance to critically hit with spells by $s1%.',
+    icon: 'Spell_Nature_NullifyDisease',
+    effects: [spellCrit(2)],
+});
+
+const ALCHEMISTS_THRIFT = createPassiveSpell(PLAGUE_DOCTOR_CONTEXT, 'mortis-alchemists-thrift', {
+    name: 'Alchemist\'s Thrift',
+    description: 'Reduces the mana cost of your spells by $S1%.',
+    icon: 'INV_Potion_137',
+    effects: [manaCost(-5)],
+});
+
+const PESTILENT_MASTERY = createPassiveSpell(PLAGUE_DOCTOR_CONTEXT, 'mortis-pestilent-mastery', {
+    name: 'Pestilent Mastery',
+    description: 'Increases all spell damage and healing you deal by $s1%.',
+    icon: 'Spell_Shadow_PlagueCloud',
+    effects: [damageDone(MAGIC_SCHOOLS, 5), healingDone(5)],
+});
+
 export const MORTIS = makeGrowingWeapon(MODULE_NAME, createClassItem(PLAGUE_DOCTOR_CONTEXT, {
     id: 'mortis',
     parent: BENT_STAFF,
@@ -68,4 +98,10 @@ export const MORTIS = makeGrowingWeapon(MODULE_NAME, createClassItem(PLAGUE_DOCT
     .Delay.set(SWING_SECONDS * 1000, 'MILLISECONDS'), {
     id: 'mortis',
     growth: MORTIS_GROWTH,
+    milestones: [
+        { level: 25, spell: PLAGUE_SCHOLAR.ID },
+        { level: 50, spell: MIASMIC_FOCUS.ID },
+        { level: 75, spell: ALCHEMISTS_THRIFT.ID },
+        { level: 100, spell: PESTILENT_MASTERY.ID },
+    ],
 });

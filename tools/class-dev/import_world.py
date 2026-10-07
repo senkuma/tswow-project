@@ -1,6 +1,7 @@
 import sqlite3, sys, csv
 S = sys.argv[1]
-db = sqlite3.connect(f'{S}/wotlk.sqlite')  # S = tools/class-dev/data; c = db.cursor()
+db = sqlite3.connect(f'{S}/wotlk.sqlite')  # S = tools/class-dev/data
+c = db.cursor()
 tables = {
  'spell_ranks': ('t_ranks.tsv', 'first_spell_id int, spell_id int, rank int'),
  'spell_bonus_data': ('t_bonus.tsv', 'entry int, direct_bonus real, dot_bonus real, ap_bonus real, ap_dot_bonus real'),

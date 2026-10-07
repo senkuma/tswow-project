@@ -14,3 +14,8 @@ Run `bash tools/class-dev/setup.sh` once (it fills the git-ignored `data/` folde
 
 Spells whose effects are DUMMY, SCRIPT_EFFECT or (PERIODIC_)DUMMY auras only work through TrinityCore class scripts,
 which never run for a clone; spellinfo.py shows them.
+
+On the Windows install with TSWoW running, `setup.sh` is not needed: build the client tables from the dataset's own
+DBCs with `py -I tools/class-dev/build_db.py modules/default/datasets/dataset/dbc_source tools/class-dev/data/wotlk.sqlite`,
+export the world tables listed in `setup.sh` from TSWoW's MySQL (`bin/mysql/mysql.exe -h127.0.0.1 -P3310 -uroot -proot`,
+database `default.dataset.world.source`) into `data/t_*.tsv`, then run `py -I tools/class-dev/import_world.py tools/class-dev/data`.
