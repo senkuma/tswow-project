@@ -30,6 +30,8 @@ const CLASS_ART: Record<string, ClassArt> = {
     MARAUDER: { retailClass: 'Rogue', specByTree: IN_ORDER },
     // Pestilence, Alchemy, Remedy: Shadow, Discipline, Holy.
     PLAGUEDOCTOR: { retailClass: 'Priest', specByTree: [2, 0, 1] },
+    // Gravity, Rift, Bulwark: Unholy, Frost, Blood.
+    VOIDKNIGHT: { retailClass: 'DeathKnight', specByTree: [2, 1, 0] },
 };
 
 const FALLBACK_ART: ClassArt = CLASS_ART.WARRIOR;

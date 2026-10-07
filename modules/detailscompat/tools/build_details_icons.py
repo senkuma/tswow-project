@@ -44,6 +44,7 @@ CUSTOM_CLASS_ICONS = {
     'MONK': INSTALL / 'modules' / 'monk' / 'images' / 'monk-icon.png',
     'MOUNTAINKING': INSTALL / 'modules' / 'mountainking' / 'images' / 'mountain-king-icon.png',
     'PLAGUEDOCTOR': INSTALL / 'modules' / 'plaguedoctor' / 'images' / 'plague-doctor-icon.png',
+    'VOIDKNIGHT': INSTALL / 'modules' / 'voidknight' / 'images' / 'void-knight-icon.png',
 }
 
 # Where Details' original sheets hold each icon (its default profile's class_coords).

@@ -1,0 +1,14 @@
+import "./VoidKnightClass";
+import "./VoidKnightSkills";
+import "./abilities/VoidShards";
+import "./abilities/Aspects";
+import "./abilities/GravityAbilities";
+import "./abilities/RiftAbilities";
+import "./abilities/BulwarkAbilities";
+import "./talents/GravityTree";
+import "./talents/RiftTree";
+import "./talents/BulwarkTree";
+import "./VoidKnightStartingKit";
+import "./VoidKnightTrainer";
+import "./VoidKnightGear";
+import "./UmbraGreatsword";

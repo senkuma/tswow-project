@@ -7,7 +7,7 @@ import { RankedAbility } from "./RankedAbility";
 const CLASS_TRAINER_TYPE = 0;
 /** Grows with level like WotLK class training: 10 copper at level 1, about 6.4 gold at 80. */
 const TRAINING_COST_FACTOR = 10;
-// Distance to the right of each existing trainer, close enough to share its floor.
+// Distance beside each existing trainer, close enough to share its floor.
 const SPAWN_OFFSET_YARDS = 1.5;
 
 export interface ClassTrainerDefinition {
@@ -23,6 +23,11 @@ export interface ClassTrainerDefinition {
      * each of these classes), starting zones included.
      */
     spawnBesideTrainersOfClass: number | number[];
+    /**
+     * Which side of each existing trainer to stand on, as the trainer faces;
+     * right when omitted. Lets two classes share the same trainers' spots.
+     */
+    spawnSide?: 'right' | 'left';
 }
 
 export function createClassTrainer(context: ClassContext, definition: ClassTrainerDefinition) {
@@ -50,7 +55,7 @@ export function createClassTrainer(context: ClassContext, definition: ClassTrain
     trainerSpawnsOfClass(definition.spawnBesideTrainersOfClass).forEach(existing => trainer.Spawns.addMod(
         context.module,
         `${definition.id}-beside-${existing.guid.get()}`,
-        besideOf(existing),
+        besideOf(existing, definition.spawnSide ?? 'right'),
         spawn => spawn.PhaseMask.set(existing.phaseMask.get())));
 
     return trainer;
@@ -68,12 +73,12 @@ function trainerSpawnsOfClass(classIds: number | number[]) {
             spawns.concat(std.SQL.creature.queryAll({ id: link.CreatureId.get() })), []);
 }
 
-function besideOf(spawn: creatureRow) {
-    const rightOfFacing = spawn.orientation.get() - Math.PI / 2;
+function besideOf(spawn: creatureRow, side: 'right' | 'left') {
+    const sideOfFacing = spawn.orientation.get() + (side === 'right' ? -Math.PI / 2 : Math.PI / 2);
     return {
         map: spawn.map.get(),
-        x: spawn.position_x.get() + Math.cos(rightOfFacing) * SPAWN_OFFSET_YARDS,
-        y: spawn.position_y.get() + Math.sin(rightOfFacing) * SPAWN_OFFSET_YARDS,
+        x: spawn.position_x.get() + Math.cos(sideOfFacing) * SPAWN_OFFSET_YARDS,
+        y: spawn.position_y.get() + Math.sin(sideOfFacing) * SPAWN_OFFSET_YARDS,
         z: spawn.position_z.get(),
         o: spawn.orientation.get(),
     };
