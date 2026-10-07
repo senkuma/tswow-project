@@ -23,9 +23,14 @@ function toByte(value: number) {
     return Math.floor(value * 255 + 0.5);
 }
 
+/** Details' question mark icon, for classes the rebuilt icon sheets have no cell for. */
+const UNKNOWN_ICON = 'UNKNOW';
+
 /**
  * Gives Details the custom classes' colors, and every icon's place on the
- * class icon sheets rebuilt by tools/build_details_icons.py.
+ * class icon sheets rebuilt by tools/build_details_icons.py. A class added
+ * since the sheets were last rebuilt gets the unknown icon rather than none,
+ * which Details fails on.
  */
 export function addClassesToDetails(details: Details) {
     if (details.class_colors === undefined || details.class_coords === undefined) {
@@ -41,5 +46,10 @@ export function addClassesToDetails(details: Details) {
     });
     Object.keys(DETAILS_ICON_COORDS).forEach(key => {
         details.class_coords![key] = [...DETAILS_ICON_COORDS[key]];
+    });
+    classes.forEach(className => {
+        if (details.class_coords![className] === undefined) {
+            details.class_coords![className] = [...DETAILS_ICON_COORDS[UNKNOWN_ICON]];
+        }
     });
 }

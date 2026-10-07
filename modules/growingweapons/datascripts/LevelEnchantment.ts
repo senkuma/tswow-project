@@ -31,6 +31,11 @@ const RATING_MASKS: Record<CombatRatingStat, number> = {
     HASTE_RATING: (1 << 17) | (1 << 18) | (1 << 19),
 };
 
+// ItemModType ITEM_MOD_SPELL_POWER, written as its number. As an aura, spell power takes two
+// effects (damage and healing done), so it is always one of the enchantment's own stat effects.
+const ITEM_MOD_SPELL_POWER = 45;
+const SPELL_POWER = 'SPELL_POWER';
+
 type StatBonus = Exclude<GrowthBonus, 'WEAPON_DAMAGE'>;
 
 interface StatAmount {
@@ -54,12 +59,18 @@ export function createLevelEnchantment(mod: string, id: string, level: number,
         if (bonus === 'WEAPON_DAMAGE') {
             enchantment.Effects.get(effectIndex++).Type.DAMAGE.set()
                 .MinDamage.set(amounts[index]).MaxDamage.set(amounts[index]);
+        } else if (bonus === SPELL_POWER) {
+            // packStats makes the first stats direct effects.
+            stats.unshift({ stat: bonus, amount: amounts[index] });
         } else {
             stats.push({ stat: bonus, amount: amounts[index] });
         }
     });
 
     const { direct, spellGroups } = packStats(stats, ENCHANTMENT_EFFECTS - effectIndex);
+    if (spellGroups.some(group => group.some(({ stat }) => stat === SPELL_POWER))) {
+        throw new Error(`Growing weapon ${id}: too many stats to keep spell power on the enchantment itself.`);
+    }
     direct.forEach(({ stat, amount }) => {
         enchantment.Effects.get(effectIndex++).Type.STAT.set()
             .Stat.set(enchantmentStat(stat)).MinStat.set(amount).MaxStat.set(amount);
@@ -100,7 +111,10 @@ function createEquipSpell(mod: string, id: string, name: string, stats: StatAmou
     spell.row.EquippedItemClass.set(-1).EquippedItemSubclass.set(0);
     stats.forEach(({ stat, amount }, index) => {
         const effect = spell.Effects.get(index).Type.APPLY_AURA.set().ImplicitTargetA.set('UNIT_CASTER');
-        if (isRating(stat)) {
+        if (stat === SPELL_POWER) {
+            // createLevelEnchantment keeps spell power out of these spells.
+            throw new Error(`Equip spell ${id} cannot hold spell power.`);
+        } else if (isRating(stat)) {
             effect.Aura.MOD_RATING.set();
             effect.MiscValueA.set(RATING_MASKS[stat]);
         } else {
@@ -115,6 +129,9 @@ function isRating(stat: StatBonus): stat is CombatRatingStat {
     return stat in RATING_MASKS;
 }
 
-function enchantmentStat(stat: StatBonus): PrimaryStat | 'CRIT_RATING' | 'HASTE' | 'HIT_RATING' {
+function enchantmentStat(stat: StatBonus): PrimaryStat | 'CRIT_RATING' | 'HASTE' | 'HIT_RATING' | number {
+    if (stat === SPELL_POWER) {
+        return ITEM_MOD_SPELL_POWER;
+    }
     return isRating(stat) ? ENCHANTMENT_RATING_STATS[stat] : stat;
 }

@@ -2,9 +2,10 @@ export declare type PrimaryStat = 'AGILITY' | 'STRENGTH' | 'INTELLECT' | 'SPIRIT
 export declare type CombatRatingStat = 'CRIT_RATING' | 'HASTE_RATING' | 'HIT_RATING';
 /**
  * What a growing weapon gains as it levels: stats, named as the client's
- * ITEM_MOD_* strings name them, or flat weapon damage per swing.
+ * ITEM_MOD_* strings name them (SPELL_POWER for casters' weapons), or flat
+ * weapon damage per swing.
  */
-export declare type GrowthBonus = PrimaryStat | CombatRatingStat | 'WEAPON_DAMAGE';
+export declare type GrowthBonus = PrimaryStat | CombatRatingStat | 'SPELL_POWER' | 'WEAPON_DAMAGE';
 /** A weapon's total bonuses at one level. */
 export interface GrowthAnchor {
     level: number;

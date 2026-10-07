@@ -29,4 +29,5 @@ export const FAMILY_BIT = {
     PANACEA: 20,
     // Effects triggered by other spells
     FESTERING_BLIGHT: 21,
+    NOXIOUS_SPLASH: 22,
 } as const;

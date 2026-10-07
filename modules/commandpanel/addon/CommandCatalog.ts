@@ -62,6 +62,17 @@ export const COMMAND_SECTIONS: CommandSection[] = [
         ],
     },
     {
+        // plaguedoctor/livescripts/GearCommand.ts
+        title: 'Plague Doctor',
+        buttons: [
+            {
+                label: 'Plague Physician gear',
+                description: 'Adds the Regalia of the Plague Physician and its weapons to your bags.',
+                command: '.plaguedoctorgear',
+            },
+        ],
+    },
+    {
         // mountainking/livescripts/GearCommand.ts and hero/HeroTalents.ts
         title: 'Mountain King',
         buttons: [

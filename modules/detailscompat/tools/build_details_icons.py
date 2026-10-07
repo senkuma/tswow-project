@@ -43,6 +43,7 @@ CUSTOM_CLASS_ICONS = {
     'MARAUDER': INSTALL / 'modules' / 'marauder' / 'images' / 'marauder-icon.png',
     'MONK': INSTALL / 'modules' / 'monk' / 'images' / 'monk-icon.png',
     'MOUNTAINKING': INSTALL / 'modules' / 'mountainking' / 'images' / 'mountain-king-icon.png',
+    'PLAGUEDOCTOR': INSTALL / 'modules' / 'plaguedoctor' / 'images' / 'plague-doctor-icon.png',
 }
 
 # Where Details' original sheets hold each icon (its default profile's class_coords).

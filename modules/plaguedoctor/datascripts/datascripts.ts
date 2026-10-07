@@ -6,3 +6,5 @@ import "./talents/AlchemyTree";
 import "./talents/RemedyTree";
 import "./PlagueDoctorStartingKit";
 import "./PlagueDoctorTrainer";
+import "./PlagueDoctorGear";
+import "./MortisCane";
